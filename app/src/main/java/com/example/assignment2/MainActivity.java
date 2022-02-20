@@ -47,11 +47,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                        connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                    //we are connected to a network
+                    connected = true;
+                }
+                else
+                    connected = false;
+
+
                 if(connected){
-                if (Nav.getVisibility()==View.INVISIBLE)
-                Toast.makeText(MainActivity.this, "Service Started", Toast.LENGTH_SHORT).show();
-                else if (Nav.getVisibility()==View.VISIBLE)
-                    Toast.makeText(MainActivity.this, "Service already running", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Service running", Toast.LENGTH_SHORT).show();
                 Nav.setVisibility(View.VISIBLE);
                 //start service to get news
                 startService(new Intent(getBaseContext(),MyService.class));
@@ -64,17 +70,44 @@ public class MainActivity extends AppCompatActivity {
 
         stopser.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                //stop service
-                stopService(new Intent(getBaseContext(),MyService.class));
-                Toast.makeText(MainActivity.this, "Service Stopped", Toast.LENGTH_SHORT).show();
-            }
+            public void onClick(View view){
 
-        });
+            if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                //we are connected to a network
+                connected = true;
+            }
+                else
+            connected = false;
+
+
+                if(connected){
+                if (Nav.getVisibility()==View.INVISIBLE)
+                    Toast.makeText(MainActivity.this, "Service Not running", Toast.LENGTH_SHORT).show();
+                else if (Nav.getVisibility()==View.VISIBLE)
+                    Toast.makeText(MainActivity.this, "Service stopped", Toast.LENGTH_SHORT).show();
+                Nav.setVisibility(View.VISIBLE);
+                //start service to get news
+                startService(new Intent(getBaseContext(),MyService.class));
+            }
+                else{
+                Toast.makeText(MainActivity.this, "Network not available", Toast.LENGTH_SHORT).show();
+            }
+        }
+    });
 
         prev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                        connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                    //we are connected to a network
+                    connected = true;
+                }
+                else
+                    connected = false;
+
                 //goto prev news and update counter view
                 if(countervalue>1&&connected){
                     countervalue--;
@@ -88,6 +121,15 @@ public class MainActivity extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                        connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                    //we are connected to a network
+                    connected = true;
+                }
+                else
+                    connected = false;
+
                 if(countervalue<total&&connected){
                     countervalue++;
                     counter.setText(countervalue+"/"+total);
