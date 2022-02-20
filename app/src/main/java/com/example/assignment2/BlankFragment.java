@@ -1,5 +1,7 @@
 package com.example.assignment2;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +9,19 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +38,9 @@ public class BlankFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    ImageView img = (ImageView) getView().findViewById(R.id.imageView);
+    TextView headline = (TextView) getView().findViewById(R.id.textView2);
+    TextView bodyView = (TextView) getView().findViewById(R.id.textView3);
 
     public BlankFragment() {
         // Required empty public constructor
@@ -48,6 +66,48 @@ public class BlankFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+
+        class fetchnews extends Thread{
+
+            String news1 = "";
+
+            @Override
+            public void run() {
+                try {
+                    URL url1 = new URL("https://petwear.in/mc2022/news/news_0.json");
+                    HttpURLConnection httpconn = (HttpURLConnection) url1.openConnection();
+                    InputStream inp = httpconn.getInputStream();
+                    BufferedReader br = new BufferedReader(new InputStreamReader(inp));
+                    String line;
+                    while ((line =  br.readLine())!=null){
+                        news1 = news1+line;
+                    }
+                    if (!news1.isEmpty()){
+                        JSONObject jobj = new JSONObject(news1);
+                        String body = jobj.getString("body");
+                        String imgurl = jobj.getString("image-url");
+                        String head = jobj.getString("title");
+
+                        headline.setText(head);
+                        bodyView.setText(body);
+                        URL imgurlurl = new URL(imgurl);
+                        img.setImageBitmap(BitmapFactory.decodeStream(imgurlurl.openConnection().getInputStream()));
+
+                    }
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
+
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
