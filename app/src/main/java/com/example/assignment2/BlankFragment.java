@@ -106,8 +106,8 @@ public class BlankFragment extends Fragment {
             }
         }
 
-
-
+        fetchnews newsone = new fetchnews();
+        newsone.run();
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
