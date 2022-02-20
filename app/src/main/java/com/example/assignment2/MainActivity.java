@@ -2,6 +2,10 @@ package com.example.assignment2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout Nav;
     TextView counter;
     Button startser,stopser,prev,next;
+    boolean connected = false;
     int countervalue = 1, total = 10;
 
     @Override
@@ -29,15 +34,31 @@ public class MainActivity extends AppCompatActivity {
         next  =  (Button) findViewById(R.id.button4);
         Nav.setVisibility(View.INVISIBLE);
 
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            connected = true;
+        }
+        else
+            connected = false;
+
         startser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if(connected){
                 if (Nav.getVisibility()==View.INVISIBLE)
                 Toast.makeText(MainActivity.this, "Service Started", Toast.LENGTH_SHORT).show();
                 else if (Nav.getVisibility()==View.VISIBLE)
                     Toast.makeText(MainActivity.this, "Service already running", Toast.LENGTH_SHORT).show();
                 Nav.setVisibility(View.VISIBLE);
                 //start service to get news
+                startService(new Intent(getBaseContext(),MyService.class));
+            }
+                else{
+                    Toast.makeText(MainActivity.this, "Network not available", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -45,28 +66,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //stop service
+                stopService(new Intent(getBaseContext(),MyService.class));
                 Toast.makeText(MainActivity.this, "Service Stopped", Toast.LENGTH_SHORT).show();
             }
+
         });
 
         prev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //goto prev news and update counter view
-                if(countervalue>1){
+                if(countervalue>1&&connected){
                     countervalue--;
                     counter.setText(countervalue+"/"+total);
                 }
+                else if(!connected)
+                    Toast.makeText(MainActivity.this, "Network not available", Toast.LENGTH_SHORT).show();
             }
         });
 
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(countervalue<total){
+                if(countervalue<total&&connected){
                     countervalue++;
                     counter.setText(countervalue+"/"+total);
                 }
+                else if(!connected)
+                    Toast.makeText(MainActivity.this, "Network not available", Toast.LENGTH_SHORT).show();
             }
         });
 
