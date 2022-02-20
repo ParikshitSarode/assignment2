@@ -38,9 +38,9 @@ public class BlankFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    ImageView img = (ImageView) getView().findViewById(R.id.imageView);
-    TextView headline = (TextView) getView().findViewById(R.id.textView2);
-    TextView bodyView = (TextView) getView().findViewById(R.id.textView3);
+    //ImageView img = (ImageView) getView().findViewById(R.id.imageView);
+    //TextView headline = (TextView) getView().findViewById(R.id.textView2);
+    //TextView bodyView = (TextView) getView().findViewById(R.id.textView3);
 
     public BlankFragment() {
         // Required empty public constructor
@@ -89,10 +89,10 @@ public class BlankFragment extends Fragment {
                         String imgurl = jobj.getString("image-url");
                         String head = jobj.getString("title");
 
-                        headline.setText(head);
-                        bodyView.setText(body);
-                        URL imgurlurl = new URL(imgurl);
-                        img.setImageBitmap(BitmapFactory.decodeStream(imgurlurl.openConnection().getInputStream()));
+                        //headline.setText(head);
+                        //bodyView.setText(body);
+                        //URL imgurlurl = new URL(imgurl);
+                        //img.setImageBitmap(BitmapFactory.decodeStream(imgurlurl.openConnection().getInputStream()));
 
                     }
 
